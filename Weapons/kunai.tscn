@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bfobuqowur0yv"]
+
+[ext_resource type="Script" path="res://Weapons/kunai.gd" id="2_kunai"]
+
+[ext_resource type="Texture2D" uid="uid://dwjlcmrgn6ofg" path="res://Weapons/KUNAI.png" id="1_n6ypr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qfbce"]
+size = Vector2(11, 6)
+
+[node name="Kunai" type="Area2D" unique_id=778999408]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("2_kunai")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1198600536]
+texture = ExtResource("1_n6ypr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1244665992]
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_qfbce")

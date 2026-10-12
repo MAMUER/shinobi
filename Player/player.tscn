@@ -3,11 +3,28 @@
 [ext_resource type="Script" uid="uid://bk5ytmpdhv7l0" path="res://Player/player.gd" id="1_gwnis"]
 [ext_resource type="Texture2D" uid="uid://c0ruhx4rhifxw" path="res://Sprites/IDLE.png" id="2_gwnis"]
 [ext_resource type="Texture2D" uid="uid://doaka3pu5h76h" path="res://Sprites/FALL2.png" id="2_k53q1"]
+[ext_resource type="Texture2D" uid="uid://bgxtvuqddv06b" path="res://Sprites/BROSOK.png" id="2_vtle1"]
 [ext_resource type="Texture2D" uid="uid://ckier052iybeq" path="res://Sprites/JUMP2.png" id="3_gwnis"]
 [ext_resource type="Texture2D" uid="uid://d2hkvw020k4mv" path="res://Sprites/RUN.png" id="4_fhl08"]
 [ext_resource type="Texture2D" uid="uid://gkq7q5hskj6m" path="res://Sprites/ATTACK 1.png" id="6_fhl08"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qfbce"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1l10g"]
+atlas = ExtResource("2_vtle1")
+region = Rect2(0, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6rl0i"]
+atlas = ExtResource("2_vtle1")
+region = Rect2(96, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7x5p2"]
+atlas = ExtResource("2_vtle1")
+region = Rect2(192, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c4i3b"]
+atlas = ExtResource("2_vtle1")
+region = Rect2(0, 192, 96, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6pogt"]
 atlas = ExtResource("2_k53q1")
@@ -193,6 +210,23 @@ region = Rect2(576, 0, 96, 96)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_1l10g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6rl0i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7x5p2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c4i3b")
+}],
+"loop": 0,
+"name": &"Brosok",
+"speed": 50.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_6pogt")
 }, {
 "duration": 1.0,
@@ -357,6 +391,8 @@ size = Vector2(40, 30)
 
 [node name="Player" type="CharacterBody2D" unique_id=2052537644]
 script = ExtResource("1_gwnis")
+kunai_distance = 120.0
+kunai_orbit_radii = Vector2(10, 10)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1331877883]
 shape = SubResource("CapsuleShape2D_qfbce")
@@ -365,9 +401,10 @@ shape = SubResource("CapsuleShape2D_qfbce")
 position = Vector2(-1.7578173, -15.242184)
 scale = Vector2(0.91162115, 0.91162115)
 sprite_frames = SubResource("SpriteFrames_qfbce")
-animation = &"SimpleAttack"
+animation = &"Brosok"
 autoplay = "Idle"
-frame_progress = 0.8337577
+frame = 3
+frame_progress = 1.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=43768508]
 zoom = Vector2(2.4, 2.4)
@@ -384,3 +421,13 @@ collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=2064466387]
 shape = SubResource("RectangleShape2D_attack")
+
+[node name="KunaiSpawn" type="Marker2D" parent="." unique_id=1251298802]
+position = Vector2(4, -5)
+
+[node name="AimLine" type="Line2D" parent="." unique_id=721666165]
+z_index = 5
+position = Vector2(0, -10)
+points = PackedVector2Array(0, 0, 60, 0)
+width = 1.0
+default_color = Color(1, 0.85, 0.25, 0.9)
