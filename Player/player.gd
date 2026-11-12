@@ -6,6 +6,7 @@ const ATTACK_DAMAGE = 20
 const ATTACK_START_FRAME = 2
 const ATTACK_END_FRAME = 3
 const KUNAI_RELEASE_FRAME = 2
+const TELEPORT_ATTACK_DAMAGE = 20
 const KUNAI_SCENE = preload("res://Weapons/kunai.tscn")
 
 @export var kunai_distance: float = 60.0
@@ -28,6 +29,13 @@ var throw_direction: Vector2 = Vector2.RIGHT
 var throw_spawn_position: Vector2 = Vector2.ZERO
 var kunai_released = false
 
+var is_teleport_combo = false
+var teleport_animation_finished = false
+var kunai_flight_finished = false
+var teleport_attack_started = false
+var teleport_position: Vector2 = Vector2.ZERO
+var teleport_start_position: Vector2 = Vector2.ZERO
+
 
 func _ready() -> void:
 	anim.animation_finished.connect(_on_animation_finished)
@@ -39,6 +47,10 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if health <= 0:
 		get_tree().change_scene_to_file("res://menu.tscn")
+		return
+
+	if is_teleport_combo:
+		_process_teleport_combo()
 		return
 
 	if not is_on_floor():
@@ -145,14 +157,22 @@ func _get_kunai_orbit_position(world_direction: Vector2) -> Vector2:
 func _update_kunai_spawn(local_position: Vector2) -> void:
 	var center: Vector2 = to_global(kunai_orbit_center)
 	var origin: Vector2 = to_global(local_position)
-	# Prevent an orbiting launch point from jumping through a nearby wall or mob.
-	var query := PhysicsRayQueryParameters2D.create(center, origin, 1, [get_rid()])
+	# Стены и пол ограничивают точку броска, а мобов пропускаем.
+	var query := PhysicsRayQueryParameters2D.create(center, origin, 1, _get_teleport_path_exclusions())
 	query.hit_from_inside = true
 	var hit: Dictionary = get_world_2d().direct_space_state.intersect_ray(query)
 	if not hit.is_empty():
 		var safe_distance: float = maxf(center.distance_to(hit["position"]) - 0.1, 0.0)
 		origin = center + (origin - center).normalized() * safe_distance
 	kunai_spawn.global_position = origin
+
+
+func _get_teleport_path_exclusions() -> Array[RID]:
+	var excluded: Array[RID] = [get_rid()]
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if enemy is CollisionObject2D:
+			excluded.append(enemy.get_rid())
+	return excluded
 
 
 func _start_kunai_throw() -> void:
@@ -175,6 +195,7 @@ func _release_kunai() -> void:
 	kunai.direction = throw_direction
 	kunai.shooter = self
 	kunai.max_distance = kunai_distance
+	kunai.flight_finished.connect(_on_kunai_flight_finished)
 
 	# The projectile belongs to the level and moves independently of gg.
 	var projectile_parent: Node = get_tree().current_scene
@@ -184,6 +205,7 @@ func _release_kunai() -> void:
 		kunai.position = projectile_parent.to_local(kunai_spawn.global_position)
 	else:
 		kunai.position = kunai_spawn.global_position
+	_start_teleport_combo()
 	projectile_parent.add_child(kunai)
 
 
@@ -209,3 +231,102 @@ func _on_animation_finished() -> void:
 		# Still throw once if the animation is later shortened in the editor.
 		_release_kunai()
 		is_throwing = false
+	elif anim.animation == "Teleport" and is_teleport_combo:
+		teleport_animation_finished = true
+		anim.hide()
+	elif anim.animation == "TeleportAttack" and is_teleport_combo:
+		_finish_teleport_combo()
+
+
+func _start_teleport_combo() -> void:
+	is_teleport_combo = true
+	is_throwing = false
+	is_aiming = false
+	teleport_animation_finished = false
+	kunai_flight_finished = false
+	teleport_attack_started = false
+	teleport_start_position = global_position
+	velocity = Vector2.ZERO
+	aim_line.hide()
+	anim.show()
+	anim.stop()
+	anim.play("Teleport")
+
+
+func _on_kunai_flight_finished(final_position: Vector2) -> void:
+	if not is_teleport_combo:
+		return
+	teleport_position = final_position
+	kunai_flight_finished = true
+
+
+func _process_teleport_combo() -> void:
+	velocity = Vector2.ZERO
+	if not teleport_attack_started:
+		if not teleport_animation_finished or not kunai_flight_finished:
+			return
+		global_position = _find_safe_teleport_position(teleport_position)
+		move_and_slide()
+		teleport_attack_started = true
+		hit_bodies.clear()
+		anim.show()
+		anim.stop()
+		anim.play("TeleportAttack")
+	_deal_teleport_attack_damage()
+
+
+func _find_safe_teleport_position(target: Vector2) -> Vector2:
+	var steps: int = int(ceil(target.distance_to(teleport_start_position) / 2.0)) + 1
+	for i in range(steps):
+		var base_position: Vector2 = target.move_toward(teleport_start_position, float(i) * 2.0)
+		# Поднимаем капсулу над полом, если кунай остановился у поверхности.
+		for up_step in range(11):
+			var candidate: Vector2 = base_position + Vector2.UP * float(up_step * 2)
+			if _can_teleport_to(candidate):
+				return candidate
+	return teleport_start_position
+
+
+func _can_teleport_to(point: Vector2) -> bool:
+	var collider: CollisionShape2D = $CollisionShape2D
+	var shape_transform: Transform2D = collider.global_transform
+	shape_transform.origin += point - global_position
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = collider.shape
+	query.transform = shape_transform
+	query.collision_mask = collision_mask
+	query.exclude = [get_rid()]
+	query.margin = 2.0
+	var space := get_world_2d().direct_space_state
+	if not space.intersect_shape(query, 1).is_empty():
+		return false
+	# Мобы не блокируют путь, но сама точка появления должна быть свободной.
+	var path := PhysicsRayQueryParameters2D.create(
+		teleport_start_position, point, collision_mask, _get_teleport_path_exclusions()
+	)
+	path.hit_from_inside = true
+	return space.intersect_ray(path).is_empty()
+
+
+func _deal_teleport_attack_damage() -> void:
+	var shape := RectangleShape2D.new()
+	shape.size = Vector2(30, 24)
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	query.transform = Transform2D(throw_direction.angle(), global_position + throw_direction * 18.0)
+	query.collision_mask = 1
+	query.exclude = [get_rid()]
+	for hit in get_world_2d().direct_space_state.intersect_shape(query):
+		var body = hit["collider"]
+		if is_instance_valid(body) and body.has_method("take_damage") and not hit_bodies.has(body):
+			hit_bodies.append(body)
+			body.call("take_damage", TELEPORT_ATTACK_DAMAGE)
+
+
+func _finish_teleport_combo() -> void:
+	is_teleport_combo = false
+	teleport_animation_finished = false
+	kunai_flight_finished = false
+	teleport_attack_started = false
+	velocity = Vector2.ZERO
+	anim.show()

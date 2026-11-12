@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bds2rnulip2y"
-path="res://.godot/imported/FALL.png-fc74ef0b45591fcc5fb71d5dbe9a2f15.ctex"
+uid="uid://cbtpmfbqorpnk"
+path="res://.godot/imported/COMBO_A_ANBU.png-ec43839d85c0ec9405cd0169ab319642.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/FALL.png"
-dest_files=["res://.godot/imported/FALL.png-fc74ef0b45591fcc5fb71d5dbe9a2f15.ctex"]
+source_file="res://Mobs Sprites/COMBO_A_ANBU.png"
+dest_files=["res://.godot/imported/COMBO_A_ANBU.png-ec43839d85c0ec9405cd0169ab319642.ctex"]
 
 [params]
 

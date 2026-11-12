@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://doaka3pu5h76h"
-path="res://.godot/imported/FALL2.png-df604ce9c9a8494d507a49e6139dabac.ctex"
+uid="uid://deqqqq3q387ao"
+path="res://.godot/imported/DAMAGE_ANBU.png-715d840e4d35ffaef2c796b944a816f6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/FALL2.png"
-dest_files=["res://.godot/imported/FALL2.png-df604ce9c9a8494d507a49e6139dabac.ctex"]
+source_file="res://Mobs Sprites/DAMAGE_ANBU.png"
+dest_files=["res://.godot/imported/DAMAGE_ANBU.png-715d840e4d35ffaef2c796b944a816f6.ctex"]
 
 [params]
 

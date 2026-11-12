@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ofvoriuf7p2m" path="res://oak_woods_v1.0/background/background_layer_1.png" id="2_0b4ue"]
 [ext_resource type="Texture2D" uid="uid://tshwqtw5byqk" path="res://oak_woods_v1.0/background/background_layer_2.png" id="3_f2txt"]
 [ext_resource type="Texture2D" uid="uid://qyrhvx7xbgmh" path="res://oak_woods_v1.0/background/background_layer_3.png" id="4_1ainy"]
-[ext_resource type="PackedScene" uid="uid://cu8iu3cnp3m1v" path="res://Mobs/skeleton.tscn" id="4_n6hdu"]
+[ext_resource type="PackedScene" uid="uid://cu8iu3cnp3m1v" path="res://Mobs/anbu.tscn" id="4_n6hdu"]
 [ext_resource type="Texture2D" uid="uid://c22hvmmrm87pt" path="res://oak_woods_v1.0/oak_woods_tileset.png" id="5_f2txt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1ainy"]
@@ -532,16 +532,16 @@ position = Vector2(262, 511)
 
 [node name="Mobs" type="Node2D" parent="." unique_id=1553170649]
 
-[node name="Skeleton" parent="Mobs" unique_id=1881214290 instance=ExtResource("4_n6hdu")]
+[node name="Anbu" parent="Mobs" unique_id=1881214290 instance=ExtResource("4_n6hdu")]
 position = Vector2(504, 434)
 
-[node name="Skeleton2" parent="Mobs" unique_id=1776281207 instance=ExtResource("4_n6hdu")]
+[node name="Anbu2" parent="Mobs" unique_id=1776281207 instance=ExtResource("4_n6hdu")]
 position = Vector2(658, 434)
 
-[node name="Skeleton3" parent="Mobs" unique_id=1177394441 instance=ExtResource("4_n6hdu")]
+[node name="Anbu3" parent="Mobs" unique_id=1177394441 instance=ExtResource("4_n6hdu")]
 position = Vector2(807, 434)
 
-[node name="Skeleton4" parent="Mobs" unique_id=932973244 instance=ExtResource("4_n6hdu")]
+[node name="Anbu4" parent="Mobs" unique_id=932973244 instance=ExtResource("4_n6hdu")]
 position = Vector2(972, 433)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1735921922]

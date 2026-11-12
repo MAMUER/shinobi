@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c0ruhx4rhifxw"
-path="res://.godot/imported/IDLE.png-504bb8e5fa2ed9fddab3806a328e3e84.ctex"
+uid="uid://bn7imr52auop0"
+path="res://.godot/imported/COMBO_MINATO.png-abf714ac2a9190833654977cf962d63f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/IDLE.png"
-dest_files=["res://.godot/imported/IDLE.png-504bb8e5fa2ed9fddab3806a328e3e84.ctex"]
+source_file="res://Sprites/COMBO_MINATO.png"
+dest_files=["res://.godot/imported/COMBO_MINATO.png-abf714ac2a9190833654977cf962d63f.ctex"]
 
 [params]
 

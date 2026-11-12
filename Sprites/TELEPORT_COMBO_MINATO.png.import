@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gkq7q5hskj6m"
-path="res://.godot/imported/ATTACK 1.png-02a33b2d9daee950a40ff9374d0c0dad.ctex"
+uid="uid://lyfcakhm6tkq"
+path="res://.godot/imported/TELEPORT_COMBO_MINATO.png-52c58103b976cadec13080a4ed575634.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/ATTACK 1.png"
-dest_files=["res://.godot/imported/ATTACK 1.png-02a33b2d9daee950a40ff9374d0c0dad.ctex"]
+source_file="res://Sprites/TELEPORT_COMBO_MINATO.png"
+dest_files=["res://.godot/imported/TELEPORT_COMBO_MINATO.png-52c58103b976cadec13080a4ed575634.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c0i8q1ymke85c"
-path="res://.godot/imported/JUMP.png-fafe5423777623daec5858b2444c9513.ctex"
+uid="uid://bqjpm6kaf4nlq"
+path="res://.godot/imported/JUMP_MINATO.png-0c2c9678822ade14a422b504769170d2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/JUMP.png"
-dest_files=["res://.godot/imported/JUMP.png-fafe5423777623daec5858b2444c9513.ctex"]
+source_file="res://Sprites/JUMP_MINATO.png"
+dest_files=["res://.godot/imported/JUMP_MINATO.png-0c2c9678822ade14a422b504769170d2.ctex"]
 
 [params]
 

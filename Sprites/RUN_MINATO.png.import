@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgxtvuqddv06b"
-path="res://.godot/imported/BROSOK.png-57cf7b9538fea64e7efa4ed017cb3b2c.ctex"
+uid="uid://eiad84pl4yi"
+path="res://.godot/imported/RUN_MINATO.png-9c5a729c35d05ad3b6a34734842c26dc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/BROSOK.png"
-dest_files=["res://.godot/imported/BROSOK.png-57cf7b9538fea64e7efa4ed017cb3b2c.ctex"]
+source_file="res://Sprites/RUN_MINATO.png"
+dest_files=["res://.godot/imported/RUN_MINATO.png-9c5a729c35d05ad3b6a34734842c26dc.ctex"]
 
 [params]
 

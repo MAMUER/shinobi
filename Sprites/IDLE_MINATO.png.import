@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnmsvh50k1mc5"
-path="res://.godot/imported/HURT.png-4edeb227a23436c945e7d3975eb2bf20.ctex"
+uid="uid://c1jjfp4w2yotp"
+path="res://.godot/imported/IDLE_MINATO.png-7f8f52211cdae1864a993b827e7925e9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/HURT.png"
-dest_files=["res://.godot/imported/HURT.png-4edeb227a23436c945e7d3975eb2bf20.ctex"]
+source_file="res://Sprites/IDLE_MINATO.png"
+dest_files=["res://.godot/imported/IDLE_MINATO.png-7f8f52211cdae1864a993b827e7925e9.ctex"]
 
 [params]
 

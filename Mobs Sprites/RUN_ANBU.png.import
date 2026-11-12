@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckier052iybeq"
-path="res://.godot/imported/JUMP2.png-7dc2cfbfdc342832dfdddd7ef0e2a2e6.ctex"
+uid="uid://brovesqgsuoua"
+path="res://.godot/imported/RUN_ANBU.png-c24e21d934ea268ef00c81dbf98e3b47.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/JUMP2.png"
-dest_files=["res://.godot/imported/JUMP2.png-7dc2cfbfdc342832dfdddd7ef0e2a2e6.ctex"]
+source_file="res://Mobs Sprites/RUN_ANBU.png"
+dest_files=["res://.godot/imported/RUN_ANBU.png-c24e21d934ea268ef00c81dbf98e3b47.ctex"]
 
 [params]
 
