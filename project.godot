@@ -15,6 +15,10 @@ run/main_scene="uid://dsp37j5dpi64f"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+I18n="*res://i18n.gd"
+
 [display]
 
 window/size/window_width_override=1920

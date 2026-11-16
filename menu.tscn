@@ -9,19 +9,24 @@ script = ExtResource("1_lti8b")
 
 [node name="Play" type="Button" parent="." unique_id=1347857085]
 offset_left = 402.0
-offset_top = 179.0
+offset_top = 65.0
 offset_right = 747.0
-offset_bottom = 314.0
-theme_override_font_sizes/font_size = 50
+offset_bottom = 200.0
 text = "Play"
 
 [node name="Quit" type="Button" parent="." unique_id=607263432]
 offset_left = 402.0
-offset_top = 371.0
+offset_top = 449.0
 offset_right = 747.0
-offset_bottom = 506.0
-theme_override_font_sizes/font_size = 50
+offset_bottom = 584.0
 text = "Quit"
+
+[node name="Language" type="Button" parent="."]
+offset_left = 402.0
+offset_top = 257.0
+offset_right = 747.0
+offset_bottom = 392.0
+text = "Language"
 
 [node name="BG" parent="." unique_id=1411615550 instance=ExtResource("2_ouk20")]
 
@@ -29,3 +34,4 @@ text = "Quit"
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="Language" to="." method="_on_language_pressed"]
