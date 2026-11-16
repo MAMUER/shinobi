@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://14rtat33lx4t"
+path="res://.godot/imported/Blessed to kill.ogg-4d67d77684bc7224602a630bb097dfdd.oggvorbisstr"
+
+[deps]
+
+source_file="res://Music/Blessed to kill.ogg"
+dest_files=["res://.godot/imported/Blessed to kill.ogg-4d67d77684bc7224602a630bb097dfdd.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
