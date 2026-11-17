@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="ui_sengoku_bar_01_frame.png" id="1_under"]
+[ext_resource type="Texture2D" path="ui_sengoku_bar_01_stamina.png" id="2_prog"]
+
+[node name="Bar" type="TextureProgressBar"]
+offset_right = 436.0
+offset_bottom = 38.0
+value = 100.0
+nine_patch_stretch = true
+stretch_margin_left = 23
+stretch_margin_right = 23
+texture_under = ExtResource("1_under")
+texture_progress = ExtResource("2_prog")

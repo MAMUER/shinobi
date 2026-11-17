@@ -1,7 +1,7 @@
 extends ParallaxBackground
 
 
-var speed = 100
+@export var speed := 50.0
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

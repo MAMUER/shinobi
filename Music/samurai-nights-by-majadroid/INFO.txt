@@ -1,0 +1,39 @@
+	/----------------------------------------------------------------->
+	|
+	|	Majadroid		by Maik Hoffmann
+	|
+	|----------------------------------------------------------------->
+	|
+	|	Website:		http://www.majadroid.com
+	|
+	|	Itch.io			https://majadroid.itch.io/
+	|	OpenGameArt		https://opengameart.org/users/majadroid
+	|
+	|	Twitter			https://twitter.com/majadroid
+	|
+	|----------------------------------------------------------------->
+	|
+	|	Feel free to support my work via Patreon!
+	|	Patreon			http://patreon.com/majadroid
+	|
+	\----------------------------------------------------------------->
+	
+	
+	/----------------------------------------------------------------->
+	|
+	|	This art package is published under CC-BY 3.0, CC-BY 3.0 and
+	|   OGA-BY 3.0 licence.
+	|
+	\----------------------------------------------------------------->
+	
+	
+	/----------------------------------------------------------------->
+	|
+	|	The music was created for my entry to the PaletteJam2 game
+	|   jam. You can play this game under the following link:
+	|   	https://majadroid.itch.io/samurai-nights
+	|
+	|	I included the single loops of this song so you can arrange
+	|	them how you like. The music was created with LMMS.
+	|
+	\----------------------------------------------------------------->
