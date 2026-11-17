@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bk5ytmpdhv7l0" path="res://Player/player.gd" id="1_gwnis"]
 [ext_resource type="Texture2D" uid="uid://cj1ynr502osvy" path="res://Sprites/THROW_MINATO.png" id="2_fhl08"]
+[ext_resource type="Texture2D" uid="uid://bnkre2ecqyvh4" path="res://Sprites/DAMAGE_MINATO.png" id="3_od3ui"]
 [ext_resource type="Texture2D" uid="uid://c1jjfp4w2yotp" path="res://Sprites/IDLE_MINATO.png" id="4_vtle1"]
 [ext_resource type="Texture2D" uid="uid://bqjpm6kaf4nlq" path="res://Sprites/JUMP_MINATO.png" id="5_vtle1"]
 [ext_resource type="Texture2D" uid="uid://bn7imr52auop0" path="res://Sprites/COMBO_MINATO.png" id="6_fhl08"]
@@ -21,6 +22,34 @@ region = Rect2(96, 0, 96, 96)
 [sub_resource type="AtlasTexture" id="AtlasTexture_7emwf"]
 atlas = ExtResource("2_fhl08")
 region = Rect2(192, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m0h3t"]
+atlas = ExtResource("3_od3ui")
+region = Rect2(0, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i4o1l"]
+atlas = ExtResource("3_od3ui")
+region = Rect2(96, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j2n6q"]
+atlas = ExtResource("3_od3ui")
+region = Rect2(0, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c6x0f"]
+atlas = ExtResource("3_od3ui")
+region = Rect2(96, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jp1hh"]
+atlas = ExtResource("3_od3ui")
+region = Rect2(192, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qs4pp"]
+atlas = ExtResource("3_od3ui")
+region = Rect2(288, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iyprq"]
+atlas = ExtResource("3_od3ui")
+region = Rect2(384, 0, 96, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fhl08"]
 atlas = ExtResource("5_vtle1")
@@ -132,6 +161,37 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_m0h3t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i4o1l")
+}],
+"loop": 0,
+"name": &"Damage",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j2n6q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c6x0f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jp1hh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qs4pp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iyprq")
+}],
+"loop": 0,
+"name": &"Death",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_fhl08")
 }, {
 "duration": 1.0,
@@ -235,6 +295,39 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="GDScript" id="GDScript_od3ui"]
+resource_name = "camera.gd"
+script/source = "extends Camera2D
+
+# Насколько далеко камера смотрит вперёд.
+@export var look_ahead_distance: float = 100
+
+# Скорость изменения смещения при развороте.
+@export var look_ahead_speed: float = 5.0
+
+# Получаем спрайт GG, чтобы определять направление его взгляда.
+@onready var gg_sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
+
+# Начальное направление взгляда камеры — вправо.
+var look_direction: float = 1.0
+
+
+func _physics_process(delta: float) -> void:
+	# В твоём проекте flip_h = true означает взгляд влево.
+	# false — взгляд вправо.
+	look_direction = -1.0 if gg_sprite.flip_h else 1.0
+
+	# Выбираем смещение камеры в сторону взгляда GG.
+	var target_x: float = look_direction * look_ahead_distance
+
+	# Плавно перемещаем камеру к выбранному смещению.
+	position.x = lerpf(
+		position.x,
+		target_x,
+		1.0 - exp(-look_ahead_speed * delta)
+	)
+"
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_attack"]
 size = Vector2(15, 30)
 
@@ -250,7 +343,7 @@ shape = SubResource("CapsuleShape2D_qfbce")
 position = Vector2(0.6249967, -0.62499684)
 scale = Vector2(0.46614584, 0.46614584)
 sprite_frames = SubResource("SpriteFrames_qfbce")
-animation = &"Idle"
+animation = &"Teleport"
 autoplay = "Idle"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=43768508]
@@ -261,7 +354,7 @@ limit_right = 5000
 limit_bottom = 656
 position_smoothing_enabled = true
 position_smoothing_speed = 4.0
-drag_horizontal_enabled = true
+script = SubResource("GDScript_od3ui")
 
 [node name="AttackArea" type="Area2D" parent="." unique_id=178500777]
 position = Vector2(30, -10)
