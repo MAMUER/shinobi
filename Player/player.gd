@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
+const ENEMY_BOUNCE_SPEED = 300.0
 const ATTACK_DAMAGE = 20
 const ATTACK_START_FRAME = 2
 const ATTACK_END_FRAME = 3
@@ -20,6 +21,11 @@ const KUNAI_SCENE = preload("res://Weapons/kunai.tscn")
 @onready var aim_line: Line2D = $AimLine
 
 var health = 100
+var is_hurt = false
+var is_dead = false
+var _active_kunai: Area2D
+var _enemy_platform_active = false
+var _saved_platform_layers: int = 0
 var is_attacking = false
 var is_aiming = false
 var is_throwing = false
@@ -45,16 +51,22 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if health <= 0:
-		get_tree().change_scene_to_file("res://menu.tscn")
+	if health <= 0 and not is_dead:
+		death()
+
+	# Damage and Death take priority over movement, attacks and teleportation.
+	if is_dead or is_hurt:
+		velocity.x = 0.0
+		velocity += get_gravity() * delta
+		_move_and_bounce_from_enemies()
 		return
 
 	if is_teleport_combo:
 		_process_teleport_combo()
 		return
 
-	if not is_on_floor():
-		velocity += get_gravity() * delta
+	# Контакт с опорой обновляется и на земле: моб не должен становиться полом.
+	velocity += get_gravity() * delta
 
 	var direction := Input.get_axis("ui_left", "ui_right")
 	var is_busy: bool = is_attacking or is_throwing
@@ -86,7 +98,7 @@ func _physics_process(delta: float) -> void:
 	if is_attacking or is_throwing:
 		velocity.x = 0
 	else:
-		if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		if Input.is_action_just_pressed("ui_accept") and is_on_floor() and not _enemy_platform_active:
 			velocity.y = JUMP_VELOCITY
 
 		if direction != 0:
@@ -94,7 +106,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 
-	move_and_slide()
+	_move_and_bounce_from_enemies()
 
 	if is_aiming:
 		# Keep the line attached to gg while moving or jumping.
@@ -112,7 +124,7 @@ func _physics_process(delta: float) -> void:
 	if is_throwing:
 		return
 
-	if not is_on_floor():
+	if not is_on_floor() or velocity.y < 0.0:
 		if velocity.y < 0:
 			anim.play("Jump")
 		else:
@@ -121,6 +133,43 @@ func _physics_process(delta: float) -> void:
 		anim.play("Run")
 	else:
 		anim.play("Idle")
+
+
+func _move_and_bounce_from_enemies() -> void:
+	# После move_and_slide() скорость падения уже может стать нулевой.
+	var vertical_speed: float = velocity.y
+	var was_falling: bool = not is_on_floor() and vertical_speed > 0.0
+	move_and_slide()
+	for index in range(get_slide_collision_count()):
+		var collision: KinematicCollision2D = get_slide_collision(index)
+		var body := collision.get_collider() as Node2D
+		if body == null or not body.is_in_group("enemies"):
+			continue
+		if collision.get_normal().dot(Vector2.UP) < cos(floor_max_angle):
+			continue
+
+		if not _enemy_platform_active:
+			_saved_platform_layers = platform_floor_layers
+			_enemy_platform_active = true
+		# GG не переносится вместе с мобом как с движущейся платформой.
+		platform_floor_layers = 0
+		if body.get("alive") == false:
+			# Тело погибшего моба не становится площадкой для GG.
+			if body is PhysicsBody2D:
+				add_collision_exception_with(body)
+			velocity.y = vertical_speed
+		elif not is_dead:
+			velocity.y = -ENEMY_BOUNCE_SPEED
+			# Падение сверху убивает anbu; простое касание опоры — только отскок.
+			if was_falling and body.get("alive") == true and body.has_method("death"):
+				body.call("death")
+				if is_instance_valid(body) and body is PhysicsBody2D:
+					add_collision_exception_with(body)
+		return
+
+	if _enemy_platform_active:
+		platform_floor_layers = _saved_platform_layers
+		_enemy_platform_active = false
 
 
 func _update_aim() -> void:
@@ -176,6 +225,8 @@ func _get_teleport_path_exclusions() -> Array[RID]:
 
 
 func _start_kunai_throw() -> void:
+	if is_dead or is_hurt:
+		return
 	is_aiming = false
 	aim_line.hide()
 	is_throwing = true
@@ -187,7 +238,7 @@ func _start_kunai_throw() -> void:
 
 
 func _release_kunai() -> void:
-	if kunai_released:
+	if is_dead or is_hurt or kunai_released:
 		return
 	kunai_released = true
 
@@ -195,6 +246,7 @@ func _release_kunai() -> void:
 	kunai.direction = throw_direction
 	kunai.shooter = self
 	kunai.max_distance = kunai_distance
+	_active_kunai = kunai
 	kunai.flight_finished.connect(_on_kunai_flight_finished)
 
 	# The projectile belongs to the level and moves independently of gg.
@@ -210,13 +262,17 @@ func _release_kunai() -> void:
 
 
 func _on_animation_frame_changed() -> void:
+	if is_dead or is_hurt:
+		return
 	if is_throwing and anim.animation == "Brosok" and anim.frame >= KUNAI_RELEASE_FRAME:
 		_release_kunai()
 
 
 func _deal_attack_damage() -> void:
+	if is_dead or is_hurt:
+		return
 	for body in attack_area.get_overlapping_bodies():
-		if not is_instance_valid(body):
+		if body == self or not is_instance_valid(body):
 			continue
 
 		if body.has_method("take_damage") and not hit_bodies.has(body):
@@ -225,6 +281,15 @@ func _deal_attack_damage() -> void:
 
 
 func _on_animation_finished() -> void:
+	if is_dead:
+		if anim.animation == "Death":
+			get_tree().call_deferred("change_scene_to_file", "res://menu.tscn")
+		return
+	if is_hurt:
+		if anim.animation == "Damage":
+			is_hurt = false
+		return
+
 	if anim.animation == "SimpleAttack":
 		is_attacking = false
 	elif anim.animation == "Brosok" and is_throwing:
@@ -254,7 +319,8 @@ func _start_teleport_combo() -> void:
 
 
 func _on_kunai_flight_finished(final_position: Vector2) -> void:
-	if not is_teleport_combo:
+	_active_kunai = null
+	if is_dead or is_hurt or not is_teleport_combo:
 		return
 	teleport_position = final_position
 	kunai_flight_finished = true
@@ -266,7 +332,7 @@ func _process_teleport_combo() -> void:
 		if not teleport_animation_finished or not kunai_flight_finished:
 			return
 		global_position = _find_safe_teleport_position(teleport_position)
-		move_and_slide()
+		_move_and_bounce_from_enemies()
 		teleport_attack_started = true
 		hit_bodies.clear()
 		anim.show()
@@ -309,6 +375,8 @@ func _can_teleport_to(point: Vector2) -> bool:
 
 
 func _deal_teleport_attack_damage() -> void:
+	if is_dead or is_hurt:
+		return
 	var shape := RectangleShape2D.new()
 	shape.size = Vector2(30, 24)
 	var query := PhysicsShapeQueryParameters2D.new()
@@ -330,3 +398,56 @@ func _finish_teleport_combo() -> void:
 	teleport_attack_started = false
 	velocity = Vector2.ZERO
 	anim.show()
+
+
+func take_damage(amount: int) -> void:
+	# Мёртвый гг не получает урон.
+	# Нулевой и отрицательный урон игнорируем.
+	if is_dead or amount <= 0:
+		return
+
+	# Пока гг телепортируется и ещё не начал атаку
+	# в точке назначения — полностью игнорируем урон.
+	if is_teleport_combo and not teleport_attack_started:
+		return
+	
+	if is_dead or amount <= 0:
+		return
+
+	health = maxi(health - amount, 0)
+	if health <= 0:
+		death()
+		return
+
+	_cancel_actions()
+	is_hurt = true
+	anim.stop()
+	anim.play("Damage")
+
+
+func death() -> void:
+	if is_dead:
+		return
+
+	is_dead = true
+	is_hurt = false
+	health = 0
+	_cancel_actions()
+	anim.stop()
+	anim.play("Death")
+
+
+func _cancel_actions() -> void:
+	is_attacking = false
+	is_aiming = false
+	is_throwing = false
+	kunai_released = false
+	hit_bodies.clear()
+	aim_line.hide()
+	_finish_teleport_combo()
+
+	# An interrupted throw must not teleport gg after another throw has started.
+	if is_instance_valid(_active_kunai):
+		if _active_kunai.is_connected("flight_finished", _on_kunai_flight_finished):
+			_active_kunai.disconnect("flight_finished", _on_kunai_flight_finished)
+	_active_kunai = null

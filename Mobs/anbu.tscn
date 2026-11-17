@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bfiydc5lh6qr8" path="res://Mobs Sprites/STANCE_ANBU.png" id="3_7hjwy"]
 [ext_resource type="Texture2D" uid="uid://cq3tc3yy468p0" path="res://Mobs Sprites/DAMAGE2_ANBU.png" id="4_0c37w"]
 [ext_resource type="Texture2D" uid="uid://brovesqgsuoua" path="res://Mobs Sprites/RUN_ANBU.png" id="4_k1f85"]
+[ext_resource type="Texture2D" uid="uid://bodojmfaxkf3" path="res://Mobs Sprites/JUMP_ANBU.png" id="6_ejq5y"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0c37w"]
 atlas = ExtResource("2_klv58")
@@ -54,6 +55,26 @@ region = Rect2(0, 0, 96, 96)
 [sub_resource type="AtlasTexture" id="AtlasTexture_fqdpr"]
 atlas = ExtResource("3_7hjwy")
 region = Rect2(96, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w5b12"]
+atlas = ExtResource("6_ejq5y")
+region = Rect2(0, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d8wgh"]
+atlas = ExtResource("6_ejq5y")
+region = Rect2(96, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vgvbd"]
+atlas = ExtResource("6_ejq5y")
+region = Rect2(192, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dv6pv"]
+atlas = ExtResource("6_ejq5y")
+region = Rect2(288, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qebpy"]
+atlas = ExtResource("6_ejq5y")
+region = Rect2(384, 0, 96, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_oe7ya"]
 atlas = ExtResource("4_k1f85")
@@ -127,6 +148,26 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_w5b12")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d8wgh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vgvbd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dv6pv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qebpy")
+}],
+"loop": 0,
+"name": &"Jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_oe7ya")
 }, {
 "duration": 1.0,
@@ -158,9 +199,9 @@ script = ExtResource("1_8neyt")
 position = Vector2(-1.9999999, -3.0000002)
 scale = Vector2(0.54334074, 0.54334074)
 sprite_frames = SubResource("SpriteFrames_qfbce")
-animation = &"Death"
+animation = &"Jump"
 autoplay = "Idle"
-frame = 3
+frame = 4
 frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1140962647]
@@ -185,6 +226,28 @@ collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=456704868]
 shape = SubResource("RectangleShape2D_6kuho")
+
+[node name="JumpObstacleCheck" type="RayCast2D" parent="."]
+position = Vector2(0, 9)
+enabled = false
+target_position = Vector2(28, 0)
+hit_from_inside = true
+
+[node name="JumpHeadCheck" type="RayCast2D" parent="."]
+position = Vector2(0, -14)
+enabled = false
+target_position = Vector2(0, -20)
+hit_from_inside = true
+
+[node name="JumpFloorCheck" type="RayCast2D" parent="."]
+position = Vector2(18, 0)
+enabled = false
+target_position = Vector2(0, 27)
+
+[node name="JumpLandingCheck" type="RayCast2D" parent="."]
+enabled = false
+target_position = Vector2(0, 120)
+hit_from_inside = true
 
 [connection signal="body_entered" from="Detector" to="." method="_on_detector_body_entered"]
 [connection signal="body_exited" from="Detector" to="." method="_on_detector_body_exited"]
