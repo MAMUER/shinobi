@@ -90,12 +90,16 @@ func _physics_process(delta: float) -> void:
 				anim.stop()
 				anim.play("SimpleAttack")
 
+	# Во время атаки можно бежать — спрайт поворачивается по направлению движения.
+	if is_attacking and direction != 0:
+		anim.flip_h = direction < 0
+
 	attack_area.position = Vector2(
 		-30.0 if anim.flip_h else 30.0,
 		-10.0
 	)
 
-	if is_attacking or is_throwing:
+	if is_throwing:
 		velocity.x = 0
 	else:
 		if Input.is_action_just_pressed("ui_accept") and is_on_floor() and not _enemy_platform_active:

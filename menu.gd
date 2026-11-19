@@ -7,10 +7,12 @@ const TEX_PRESSED := preload("res://Tiles/Sengoku_Pixel_Pack/ui/ui_sengoku_butto
 
 @onready var play_btn: Button = $Play
 @onready var quit_btn: Button = $Quit
-@onready var lang_btn: Button = $Language
+@onready var settings_btn: Button = $Settings
+@onready var settings_menu: SettingsMenu = $SettingsMenu
 
 func _ready() -> void:
 	_setup_buttons()
+	settings_menu.language_changed.connect(_refresh_texts)
 	_refresh_texts()
 
 func _setup_buttons() -> void:
@@ -19,7 +21,7 @@ func _setup_buttons() -> void:
 	var pressed := _make_box(TEX_PRESSED)
 	_style_button(play_btn, normal, hover, pressed)
 	_style_button(quit_btn, normal, hover, pressed)
-	_style_button(lang_btn, normal, hover, pressed)
+	_style_button(settings_btn, normal, hover, pressed)
 
 func _make_box(tex: Texture2D) -> StyleBoxTexture:
 	var box := StyleBoxTexture.new()
@@ -45,11 +47,10 @@ func _on_quit_pressed() -> void:
 func _on_play_pressed() -> void:
 	get_tree().change_scene_to_file("res://level.tscn")
 
-func _on_language_pressed() -> void:
-	I18n.call("toggle_locale")
-	_refresh_texts()
+func _on_settings_pressed() -> void:
+	settings_menu.open()
 
 func _refresh_texts() -> void:
 	play_btn.text = tr("play")
 	quit_btn.text = tr("quit")
-	lang_btn.text = tr("language")
+	settings_btn.text = tr("settings")

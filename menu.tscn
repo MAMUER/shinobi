@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bva5e2gincuqf" path="res://menu.gd" id="1_lti8b"]
 [ext_resource type="PackedScene" uid="uid://dvbjjs3cr2fxj" path="res://bg.tscn" id="2_ouk20"]
 [ext_resource type="PackedScene" uid="uid://c15s4ibpssf67" path="res://woods.tscn" id="3_mae5d"]
+[ext_resource type="Script" path="res://settings_menu.gd" id="4_settings"]
 
 [node name="Menu" type="Node2D" unique_id=1256193662]
 script = ExtResource("1_lti8b")
@@ -21,17 +22,80 @@ offset_right = 747.0
 offset_bottom = 584.0
 text = "Quit"
 
-[node name="Language" type="Button" parent="."]
+[node name="Settings" type="Button" parent="."]
 offset_left = 402.0
 offset_top = 257.0
 offset_right = 747.0
 offset_bottom = 392.0
-text = "Language"
+text = "Settings"
 
 [node name="BG" parent="." unique_id=1411615550 instance=ExtResource("2_ouk20")]
 
 [node name="Woods" parent="." unique_id=726194461 instance=ExtResource("3_mae5d")]
 
+[node name="SettingsMenu" type="CanvasLayer" parent="."]
+layer = 10
+script = ExtResource("4_settings")
+
+[node name="Root" type="Control" parent="SettingsMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="SettingsMenu/Root"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Panel" type="VBoxContainer" parent="SettingsMenu/Root"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="SettingsMenu/Root/Panel"]
+theme_override_font_sizes/font_size = 32
+text = "Настройки"
+horizontal_alignment = 1
+
+[node name="LangRow" type="HBoxContainer" parent="SettingsMenu/Root/Panel"]
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="LangLabel" type="Label" parent="SettingsMenu/Root/Panel/LangRow"]
+theme_override_font_sizes/font_size = 24
+text = "Язык:"
+
+[node name="LangButton" type="Button" parent="SettingsMenu/Root/Panel/LangRow"]
+theme_override_font_sizes/font_size = 24
+text = "English"
+
+[node name="FpsRow" type="HBoxContainer" parent="SettingsMenu/Root/Panel"]
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="FpsLabel" type="Label" parent="SettingsMenu/Root/Panel/FpsRow"]
+theme_override_font_sizes/font_size = 24
+text = "FPS:"
+
+[node name="FpsButton" type="Button" parent="SettingsMenu/Root/Panel/FpsRow"]
+theme_override_font_sizes/font_size = 24
+text = "60"
+
+[node name="BackButton" type="Button" parent="SettingsMenu/Root/Panel"]
+theme_override_font_sizes/font_size = 28
+text = "Назад"
+
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
-[connection signal="pressed" from="Language" to="." method="_on_language_pressed"]
+[connection signal="pressed" from="Settings" to="." method="_on_settings_pressed"]
