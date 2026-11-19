@@ -7,8 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://cu8iu3cnp3m1v" path="res://Mobs/anbu.tscn" id="4_n6hdu"]
 [ext_resource type="Texture2D" uid="uid://c22hvmmrm87pt" path="res://oak_woods_v1.0/oak_woods_tileset.png" id="5_f2txt"]
 [ext_resource type="Script" uid="uid://b3nmyawf8wcny" path="res://pause_menu.gd" id="10_pause"]
-[ext_resource type="AudioStream" path="res://Music/sakura_variation.ogg" id="11_music"]
-[ext_resource type="Script" path="res://music.gd" id="12_music"]
+[ext_resource type="AudioStream" uid="uid://bghox0v6k8i4y" path="res://Music/sakura_variation.ogg" id="11_music"]
+[ext_resource type="Script" uid="uid://rvnrx77rfvfx" path="res://music.gd" id="12_music"]
 
 [sub_resource type="GDScript" id="GDScript_1ainy"]
 script/source = "extends Label
@@ -671,9 +671,14 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Dim" type="ColorRect" parent="PauseMenu/Root" unique_id=724120385]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -41.0
+offset_top = 16.0
+offset_right = -41.0
+offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.6)
@@ -712,7 +717,8 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Выход"
 
-[node name="Music" type="AudioStreamPlayer" parent="."]
+[node name="Music" type="AudioStreamPlayer" parent="." unique_id=1008084371]
 stream = ExtResource("11_music")
 volume_db = -10.0
 script = ExtResource("12_music")
+
